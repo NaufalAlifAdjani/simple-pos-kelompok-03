@@ -10,35 +10,15 @@
     cart: [],
 
     addToCart(id, name, price) {
-        const existing = this.cart.find(item => item.id === id);
-        if (existing) {
-            existing.qty++;
-        } else {
-            this.cart.push({ id, name, price, qty: 1 });
-        }
+        this.cart.push({ id, name, price });
     },
 
-    increaseQty(id) {
-        const item = this.cart.find(item => item.id === id);
-        if (item) item.qty++;
-    },
-
-    decreaseQty(id) {
-        const item = this.cart.find(item => item.id === id);
-        if (!item) return;
-        if (item.qty > 1) {
-            item.qty--;
-        } else {
-            this.removeFromCart(id);
-        }
-    },
-
-    removeFromCart(id) {
-        this.cart = this.cart.filter(item => item.id !== id);
+    removeFromCart(index) {
+        this.cart.splice(index, 1);
     },
 
     subtotal() {
-        return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        return this.cart.reduce((sum, item) => sum + item.price, 0);
     },
 
     formatRp(num) {
@@ -65,37 +45,22 @@
             <p class="text-sm text-slate-400">Belum ada item di keranjang.</p>
         </template>
 
-        <template x-for="item in cart" :key="item.id">
-            <div class="flex items-center justify-between gap-3 py-2 border-b last:border-b-0">
+        <template x-for="(item, index) in cart" :key="index">
+            <div class="flex items-center justify-between gap-3 py-1">
 
-                <div>
-                    <p class="font-medium" x-text="item.name"></p>
-                    <p class="text-sm text-slate-500" x-text="formatRp(item.price) + ' x ' + item.qty"></p>
-                </div>
+                <p x-text="item.name + ' - ' + formatRp(item.price)"></p>
 
-                <div class="flex items-center gap-2">
-                    <button type="button"
-                        class="w-7 h-7 border rounded text-sm hover:bg-slate-100"
-                        @click="decreaseQty(item.id)">-</button>
-
-                    <span x-text="item.qty" class="w-6 text-center"></span>
-
-                    <button type="button"
-                        class="w-7 h-7 border rounded text-sm hover:bg-slate-100"
-                        @click="increaseQty(item.id)">+</button>
-
-                    <button
-                        type="button"
-                        class="text-sm text-red-600 hover:text-red-800 ml-3"
-                        @click="removeFromCart(item.id)">
-                        Hapus
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    class="text-sm text-red-600 hover:text-red-800"
+                    @click="removeFromCart(index)">
+                    Hapus
+                </button>
 
             </div>
         </template>
 
-        <p class="font-semibold mt-3 text-lg">
+        <p class="font-semibold mt-2">
             Subtotal: <span x-text="formatRp(subtotal())"></span>
         </p>
 
