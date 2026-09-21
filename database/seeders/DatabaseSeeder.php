@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
                 'name' => fake()->unique()->words(3, true),
                 'price' => fake()->numberBetween(1000, 50000),
                 'stock' => fake()->numberBetween(0, 100),
+                'is_active' => $i % 10 === 0 ? false : true,   // ← BARIS BARU
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
