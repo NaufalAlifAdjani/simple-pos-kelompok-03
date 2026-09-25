@@ -9,5 +9,6 @@
            class="px-3 py-1.5 rounded transition-all text-sm font-medium {{ Request::routeIs('transactions.index') ? 'bg-slate-800 text-blue-400 font-semibold' : 'text-slate-300 hover:text-white hover:underline' }}">
             Transaksi
         </a>
+        <a href="{{ route('products.index') }}" class="hover:underline">Produk</a>
     </nav>
 </div>
