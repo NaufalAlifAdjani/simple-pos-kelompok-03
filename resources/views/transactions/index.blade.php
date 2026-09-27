@@ -3,7 +3,28 @@
 @section('title', 'Riwayat Transaksi')
 
 @section('content')
-    <h1 class="text-lg font-semibold mb-4">Riwayat Transaksi</h1>
-    <!-- Konten Riwayat Transaksi -->
+<h1 class="text-lg font-semibold mb-4">Riwayat Transaksi</h1>
 
+@foreach ($transactions as $transaction)
+<div class="border rounded-md p-3 mb-3">
+<p class="font-medium">
+        Transaksi #{{ $transaction->id }} 
+        &middot; {{ $transaction->created_at->format('d M Y H:i') }} 
+        &middot; <span class="bg-slate-100 text-slate-700 px-2 py-0.5 rounded text-xs">{{ $transaction->details->sum('qty') }} Item</span>
+        &middot; Rp {{ number_format($transaction->total) }}
+    </p>
+    <ul class="text-sm text-slate-500 mt-1">
+        @foreach ($transaction->details as $detail)
+        <li>
+            {{ $detail->product->name }} &times; {{ $detail->qty }} 
+            &middot; Rp {{ number_format($detail->subtotal) }}
+        </li>
+        @endforeach
+    </ul>
+</div>
+@endforeach
+
+<div class="mt-4">
+    {{ $transactions->links() }}
+</div>
 @endsection
