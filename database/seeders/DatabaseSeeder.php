@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(DemoUserSeeder::class);
         // 1. User Kasir & Admin (Sudah diperbaiki agar tidak double dan memiliki kolom role)
         DB::table('users')->insert([
             [
