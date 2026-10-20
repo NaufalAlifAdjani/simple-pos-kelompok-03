@@ -10,13 +10,24 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. User kasir
+        // 1. User Kasir & Admin (Sudah diperbaiki agar tidak double dan memiliki kolom role)
         DB::table('users')->insert([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => Hash::make('password'),
-            'created_at' => now(),
-            'updated_at' => now(),
+            [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'password' => Hash::make('password'),
+                'role' => 'kasir',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Admin Kafe',
+                'email' => 'admin@pos.test',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
 
         // 2. Kategori (5 buah)
@@ -40,7 +51,7 @@ class DatabaseSeeder extends Seeder
                 'name' => fake()->unique()->words(3, true),
                 'price' => fake()->numberBetween(1000, 50000),
                 'stock' => fake()->numberBetween(0, 100),
-                'is_active' => $i % 10 === 0 ? false : true,   // ← BARIS BARU
+                'is_active' => $i % 10 === 0 ? false : true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -53,7 +64,8 @@ class DatabaseSeeder extends Seeder
 
         // 4. 2500 transaksi + detail (dibungkus DB::transaction)
         DB::transaction(function () use ($productRows) {
-            $userId = DB::table('users')->value('id');
+            // Ambil ID User pertama (bisa kasir atau admin untuk keperluan dummy data data transaksi)
+            $userId = DB::table('users')->where('role', 'kasir')->value('id') ?? DB::table('users')->value('id');
             $transactions = [];
             $details = [];
 
