@@ -10,7 +10,6 @@ class DemoUserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-
             ['email' => 'admin@pos.test'],
             ['name' => 'Admin Kafe', 'role' => 'admin', 'password' => 'password'],
         );
