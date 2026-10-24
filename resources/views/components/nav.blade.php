@@ -23,6 +23,7 @@
                 Kategori
             </a>
             <a href="{{ route('reports.index') }}" class="hover:underline">Laporan</a>
+            <a href="{{ route('import.create') }}" class="hover:underline">Import</a>
         @endif
 
         {{-- Info user + tombol keluar --}}
