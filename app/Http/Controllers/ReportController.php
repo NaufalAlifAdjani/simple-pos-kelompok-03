@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Exports\SalesReportExport;
 use App\Jobs\ProcessProductImport;
+use App\Models\Product;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -61,10 +63,20 @@ class ReportController extends Controller
     {
         [$from, $to] = $this->resolveDateRange($request);
 
+        $topProducts = Product::join('transaction_details', 'products.id', '=', 'transaction_details.product_id')
+            ->join('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')
+            ->whereBetween('transactions.created_at', [$from, $to])
+            ->select('products.name', DB::raw('SUM(transaction_details.qty) as total_qty'))
+            ->groupBy('products.id', 'products.name')
+            ->orderByDesc('total_qty')
+            ->limit(5)
+            ->get();
+
         $pdf = Pdf::loadView('reports.pdf', [
             'totalPenjualan'  => $this->filteredQuery($from, $to)->sum('total'),
             'jumlahTransaksi' => $this->filteredQuery($from, $to)->count(),
             'transactions'    => $this->filteredQuery($from, $to)->latest()->limit(50)->get(),
+            'topProducts'     => $topProducts,
             'from'            => $from->toDateString(),
             'to'              => $to->toDateString(),
         ]);
