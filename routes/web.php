@@ -45,5 +45,8 @@ Route::middleware('auth')->group(function () {
             ReportController::class,
             'exportExcel'
         ])->name('reports.export.xlsx');
+        Route::get('/import', [ReportController::class, 'importForm'])->name('import.create');
+        Route::post('/import', [ReportController::class, 'import'])->name('import.store');
+
     });
 });
