@@ -87,3 +87,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
     Hasil yang Diharapkan:
     *   Sistem mendeteksi bahwa pengguna belum melakukan autentikasi (tamu).
     *   Laravel otomatis melakukan redirect (pengalihan) kembali ke halaman `/login`, bukan memunculkan halaman error kode status.
+
+## Diskusi: Pemilihan Format Ekspor Laporan
+
+Untuk laporan 100.000 transaksi, format yang paling tepat adalah CSV karena diekspor dengan metode *streaming* (`lazyById`) yang menghemat memori. Sebaliknya, format PDF (DomPDF) memuat seluruh dokumen di memori sekaligus sehingga rentan menyebabkan *Out of Memory* jika data terlalu besar.
