@@ -60,34 +60,43 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## SKENARIO UJI MANUAL - AUTENTIKASI & OTORISASI RBAC (INCREMENT 7)
 
- 1. Skenario Uji: Peran Admin (Langkah 9 - Poin 2)
+1.  Skenario Uji: Peran Admin (Langkah 9 - Poin 2)
     Langkah Pengujian:
     1. Buka browser dan akses halaman `/login`.
     2. Masukkan email `admin@pos.test` dan kata sandi `password`.
     3. Setelah berhasil masuk ke sistem, klik menu Produk atau akses langsung URL `http://127.0.0`.
-    Hasil yang Diharapkan:
-    *   Pengguna berhasil masuk dan dialihkan.
-    *   Menu navigasi atas menampilkan menu Produk dan Kategori serta nama akun "Admin Kafe (admin)".
-    *   Halaman daftar produk (`/products`) terbuka secara normal dan menampilkan data produk.
+       Hasil yang Diharapkan:
+    - Pengguna berhasil masuk dan dialihkan.
+    - Menu navigasi atas menampilkan menu Produk dan Kategori serta nama akun "Admin Kafe (admin)".
+    - Halaman daftar produk (`/products`) terbuka secara normal dan menampilkan data produk.
 
- 2. Skenario Uji: Peran Kasir (Langkah 9 - Poin 3 & 4)
+2.  Skenario Uji: Peran Kasir (Langkah 9 - Poin 3 & 4)
     Langkah Pengujian :
     1. Melakukan logout dari akun admin.
     2. Buka kembali halaman `/login` lalu masukkan email `kasir@pos.test` (atau `test@example.com`) dan kata sandi `password`.
     3. Coba ketik secara manual URL `http://127.0.0` atau `/categories` pada address bar browser.
-    Hasil yang Diharapkan :
-    *   Saat berhasil login, kasir diarahkan ke halaman utama transaksi kasir (`/pos`) secara normal.
-    *   Menu navigasi atas menyembunyikan menu Produk dan Kategori.
-    *   Saat mengakses URL `/products` secara manual, sistem menolak dan menampilkan Halaman Error 403 Forbidden dengan pesan "Anda tidak memiliki akses untuk halaman ini.".
+       Hasil yang Diharapkan :
+    - Saat berhasil login, kasir diarahkan ke halaman utama transaksi kasir (`/pos`) secara normal.
+    - Menu navigasi atas menyembunyikan menu Produk dan Kategori.
+    - Saat mengakses URL `/products` secara manual, sistem menolak dan menampilkan Halaman Error 403 Forbidden dengan pesan "Anda tidak memiliki akses untuk halaman ini.".
 
- 3. Skenario Uji: Tamu / Pengguna Belum Login (Langkah 9 - Poin 6)
+3.  Skenario Uji: Tamu / Pengguna Belum Login (Langkah 9 - Poin 6)
     Langkah Pengujian:
     1. Pastikan browser dalam kondisi belum login (buka jendela Incognito baru).
     2. Coba akses langsung URL halaman terproteksi seperti `http://127.0.0` atau `http://127.0.0`.
-    Hasil yang Diharapkan:
-    *   Sistem mendeteksi bahwa pengguna belum melakukan autentikasi (tamu).
-    *   Laravel otomatis melakukan redirect (pengalihan) kembali ke halaman `/login`, bukan memunculkan halaman error kode status.
+       Hasil yang Diharapkan:
+    - Sistem mendeteksi bahwa pengguna belum melakukan autentikasi (tamu).
+    - Laravel otomatis melakukan redirect (pengalihan) kembali ke halaman `/login`, bukan memunculkan halaman error kode status.
 
 ## Diskusi: Pemilihan Format Ekspor Laporan
 
-Untuk laporan 100.000 transaksi, format yang paling tepat adalah CSV karena diekspor dengan metode *streaming* (`lazyById`) yang menghemat memori. Sebaliknya, format PDF (DomPDF) memuat seluruh dokumen di memori sekaligus sehingga rentan menyebabkan *Out of Memory* jika data terlalu besar.
+Untuk laporan 100.000 transaksi, format yang paling tepat adalah CSV karena diekspor dengan metode _streaming_ (`lazyById`) yang menghemat memori. Sebaliknya, format PDF (DomPDF) memuat seluruh dokumen di memori sekaligus sehingga rentan menyebabkan _Out of Memory_ jika data terlalu besar.
+
+## Pembagian Tugas Kelompok jobsheet 9
+
+| Nama Anggota           | Langkah/Tugas yang Dikerjakan                      | Hash Commit |
+| ---------------------- | -------------------------------------------------- | ----------- |
+| Naufal Alif Adjani     | Langkah 1, 2, 3, 9, 10 (Filter kategori & penutup) |             |
+| Muhammad Rifat Syamlan | Langkah 4, 5, 9, 10 (Import Laravel Excel)         |             |
+| Achmad Alfi Maksum     | Langkah 6, 9, 10 (Tabel produk PDF) & Deliverable  |             |
+| Siti Aisyah            | Langkah 7, 8, 9, 10 (Row gagal import)             |             |
