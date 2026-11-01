@@ -14,8 +14,8 @@ class ProcessProductImport implements ShouldQueue
     use Queueable;
 
     public int $tries = 3;
-    public array $backoff = [10, 30];
-    public int $timeout = 90;
+    public array $backoff = [10, 60];
+    public int $timeout = 60;
 
     private string $csvPath;
 
