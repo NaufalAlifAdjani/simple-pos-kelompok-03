@@ -92,11 +92,22 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 Untuk laporan 100.000 transaksi, format yang paling tepat adalah CSV karena diekspor dengan metode _streaming_ (`lazyById`) yang menghemat memori. Sebaliknya, format PDF (DomPDF) memuat seluruh dokumen di memori sekaligus sehingga rentan menyebabkan _Out of Memory_ jika data terlalu besar.
 
-## Pembagian Tugas Kelompok jobsheet 9
+## Identifikasi Proses Simple POS yang Layak Dipindah ke Queued Job (Langkah 10)
 
-| Nama Anggota           | Langkah/Tugas yang Dikerjakan                      | Hash Commit |
-| ---------------------- | -------------------------------------------------- | ----------- |
-| Naufal Alif Adjani     | Langkah 1, 2, 3, 9, 10 (Filter kategori & penutup) |             |
-| Muhammad Rifat Syamlan | Langkah 4, 5, 9, 10 (Import Laravel Excel)         |             |
-| Achmad Alfi Maksum     | Langkah 6, 9, 10 (Tabel produk PDF) & Deliverable  |             |
-| Siti Aisyah            | Langkah 7, 8, 9, 10 (Row gagal import)             |             |
+Proses yang sangat layak dipindahkan ke **queued job** pada sistem Simple POS adalah **Pengiriman Struk Pembelian Digital (Email/WhatsApp Receipt)** dan **Notifikasi Peringatan Stok Menipis (Low Stock Alert)** ke Admin:
+
+1. **Menghilangkan Latensi Kasir (Non-Blocking I/O):**
+   Saat transaksi kasir selesai disimpan (`TransactionController::store`), kasir harus langsung dapat melayani antrean pelanggan berikutnya tanpa jeda. Menghubungi mail server (SMTP) atau webhook API WhatsApp secara _synchronous_ membutuhkan waktu 1-3 detik per transaksi. Dengan background queue, kasir mendapatkan respons instan.
+2. **Ketahanan dan Mekanisme Coba Ulang (Retry & Resilience):**
+   Layanan pihak ketiga (email/SMS gateway) rentan mengalami kendala jaringan sewaktu-waktu. Jika dijalankan di antrean (_queue worker_), kegagalan koneksi tidak akan membatalkan transaksi belanja yang sah, dan Laravel dapat mencoba mengirimkan kembali secara otomatis berkat konfigurasi `$tries` dan `$backoff`.
+3. **Skalabilitas Kasir di Jam Sibuk (Peak Hours):**
+   Pemisahan tugas berat seperti _rendering_ PDF struk digital dan pengiriman data ke antrean terpisah memastikan performa aplikasi kasir tetap stabil dan cepat walaupun ratusan transaksi masuk secara bersamaan.
+
+## Pembagian Tugas Kelompok Jobsheet 9
+
+| Nama Anggota           | Langkah/Tugas yang Dikerjakan                                                         | Hash Commit                      |
+| ---------------------- | ------------------------------------------------------------------------------------- | -------------------------------- |
+| Naufal Alif Adjani     | Langkah 1, 2, 3, 9, 10 (Filter kategori laporan, dokumentasi queue di README)        | `72770db`, `45967d9`, `c9ad0fa`  |
+| Muhammad Rifat Syamlan | Langkah 4, 5, 9 (Pengukuran memori get vs lazyById, export laporan ke Excel)          | `6304a7a`, `6fa59ea`             |
+| Achmad Alfi Maksum     | Langkah 6, 9, 10 (Laporan PDF, tabel produk terlaris di PDF, penutup increment 9)     | `996f832`, `8e1bfa3`, `cc214cb` |
+| Siti Aisyah            | Langkah 7, 8, 9, 10 (Import CSV idempotent, queued job import, log baris gagal)       | `2ae1631`, `9030157`, `d86fea1` |
