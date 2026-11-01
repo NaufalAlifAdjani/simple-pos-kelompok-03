@@ -109,13 +109,17 @@ class ReportController extends Controller
     public function import(Request $request): RedirectResponse
     {
         $request->validate([
-            'csv' => ['required', 'file', 'mimes:csv,txt'],
+            'csv'    => ['required', 'file', 'mimes:csv,txt'],
+            'method' => ['required', 'in:excel,manual'],
         ]);
 
-        $path = $request->file('csv')->store('imports');
-        ProcessProductImport::dispatch($path);
+        $path   = $request->file('csv')->store('imports');
+        $method = $request->input('method', 'excel');
 
-        return back()->with('success', 'Import sedang diproses di background.');
+        ProcessProductImport::dispatch($path, $method);
+
+        $metodeLabel = $method === 'excel' ? 'Laravel Excel' : 'Manual PHP';
+        return back()->with('success', "Import via {$metodeLabel} sedang diproses di background.");
     }
 
     private function resolveDateRange(Request $request): array

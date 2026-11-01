@@ -13,6 +13,24 @@
 
 <form method="POST" action="{{ route('import.store') }}" enctype="multipart/form-data" class="max-w-md">
     @csrf
+
+    <label class="block mb-3">
+        <span class="text-sm font-medium">Metode Import</span>
+        <div class="mt-1 flex gap-4 text-sm">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="radio" name="method" value="excel" checked class="text-slate-900">
+                <span>Laravel Excel (ToModel + Chunk)</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="radio" name="method" value="manual" class="text-slate-900">
+                <span>Versi Manual (Custom Logging)</span>
+            </label>
+        </div>
+        @error('method')
+        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+        @enderror
+    </label>
+
     <label class="block mb-3">
         <span class="text-sm font-medium">File CSV</span>
         <input type="file" name="csv" accept=".csv" class="mt-1 block w-full text-sm">
